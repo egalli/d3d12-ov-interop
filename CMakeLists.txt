@@ -128,6 +128,8 @@ endif()
 # include common utils
 # add_subdirectory(common)
 
+add_subdirectory(thirdparty/ocl)
+
 # samples build can be switched off during whole OpenVINO build
 if (DEFINED OpenVINO_SOURCE_DIR AND NOT ENABLE_SAMPLES)
     return()
@@ -207,7 +209,7 @@ macro(ov_add_sample)
     endif()
     #target_include_directories(${SAMPLE_NAME} PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/../common")
 
-    target_link_libraries(${SAMPLE_NAME} PRIVATE ${ov_link_libraries} Threads::Threads ${SAMPLE_DEPENDENCIES})
+    target_link_libraries(${SAMPLE_NAME} PRIVATE ${ov_link_libraries} Threads::Threads ${SAMPLE_DEPENDENCIES} OpenCL)
 
     install(TARGETS ${SAMPLE_NAME}
             RUNTIME DESTINATION samples_bin/
