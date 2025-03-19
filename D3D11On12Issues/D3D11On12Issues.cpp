@@ -82,27 +82,29 @@ int main() {
 	D3D12_HEAP_PROPERTIES heap_props = {};
 	heap_props.Type = D3D12_HEAP_TYPE_DEFAULT;
 	D3D11_RESOURCE_FLAGS flags = {};
-	flags.MiscFlags =
-		D3D11_RESOURCE_MISC_SHARED | D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
+	flags.BindFlags = D3D11_BIND_UNORDERED_ACCESS;
+	flags.MiscFlags = 0
+        | D3D11_RESOURCE_MISC_SHARED
+		| D3D11_RESOURCE_MISC_BUFFER_ALLOW_RAW_VIEWS;
 
-	// Create from D3D12 device
-	if (FAILED(d3d12_device->CreateCommittedResource(
-		&heap_props, D3D12_HEAP_FLAG_SHARED, &desc,
-		D3D12_RESOURCE_STATE_COMMON, nullptr,
-		IID_PPV_ARGS(&d3d12_buffer)))) {
-		std::cerr << "Failed to create D3D12 resource" << std::endl;
-		return 1;
-	}
+	//// Create from D3D12 device
+	//if (FAILED(d3d12_device->CreateCommittedResource(
+	//	&heap_props, D3D12_HEAP_FLAG_NONE, &desc,
+	//	D3D12_RESOURCE_STATE_COMMON, nullptr,
+	//	IID_PPV_ARGS(&d3d12_buffer)))) {
+	//	std::cerr << "Failed to create D3D12 resource" << std::endl;
+	//	return 1;
+	//}
 
-	// // Create using compatibility device
-	// if (FAILED(compatibility_device->CreateSharedResource(
-	//         &heap_props, D3D12_HEAP_FLAG_SHARED, &desc,
-	//         D3D12_RESOURCE_STATE_COMMON, nullptr, &flags,
-	//         D3D12_COMPATIBILITY_SHARED_FLAG_NON_NT_HANDLE, nullptr, nullptr,
-	//         IID_PPV_ARGS(&d3d12_buffer)))) {
-	//   std::cerr << "Failed to create shared D3D12 resource" << std::endl;
-	//   return 1;
-	// }
+	 // Create using compatibility device
+	 if (FAILED(compatibility_device->CreateSharedResource(
+	         &heap_props, D3D12_HEAP_FLAG_SHARED, &desc,
+	         D3D12_RESOURCE_STATE_COMMON, nullptr, &flags,
+	         D3D12_COMPATIBILITY_SHARED_FLAG_NON_NT_HANDLE, nullptr, nullptr,
+	         IID_PPV_ARGS(&d3d12_buffer)))) {
+	   std::cerr << "Failed to create shared D3D12 resource" << std::endl;
+	   return 1;
+	 }
 
 	ComPtr<ID3D11Buffer> d3d11_buffer;
 	if (FAILED(d3d11on12_device->CreateWrappedResource(
